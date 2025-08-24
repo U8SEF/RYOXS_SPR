@@ -40,6 +40,73 @@
       color:#c084fc; text-shadow:0 0 10px #c084fc;
     }
 
+    .mobile-menu-btn {
+      display:none;
+      background:none;
+      border:none;
+      color:#c084fc;
+      font-size:1.5rem;
+      cursor:pointer;
+      padding:5px;
+    }
+
+    .mobile-menu {
+      display:none;
+      position:fixed;
+      top:80px;
+      left:0;
+      right:0;
+      background:rgba(0,0,0,0.95);
+      border-bottom:1px solid rgba(192,132,252,0.3);
+      padding:20px;
+      z-index:999;
+      transform:translateY(-100%);
+      transition:transform 0.3s ease;
+    }
+
+    .mobile-menu.active {
+      transform:translateY(0);
+    }
+
+    .mobile-menu-links {
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+      text-align:center;
+    }
+
+    .mobile-menu-link {
+      color:#fff;
+      text-decoration:none;
+      font-weight:700;
+      font-size:1.2rem;
+      padding:15px;
+      border:2px solid transparent;
+      border-radius:10px;
+      transition:all 0.3s ease;
+    }
+
+    .mobile-menu-link:hover,
+    .mobile-menu-link.active {
+      color:#c084fc;
+      border-color:#c084fc;
+      background:rgba(192,132,252,0.1);
+    }
+
+    @media (max-width:768px) {
+      .nav-links {
+        display:none;
+      }
+
+      .mobile-menu-btn {
+        display:block;
+      }
+
+      .mobile-menu {
+        display:block;
+      }
+    }
+
     .grid-bg {
       position:fixed; top:0; left:0;
       width:100%; height:100%;
@@ -276,8 +343,17 @@
       <a href="#products" class="nav-link">Products</a>
       <a href="#about" class="nav-link">About Me</a>
     </div>
+    <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
   </div>
 </nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-links">
+    <a href="#home" class="mobile-menu-link active">Home</a>
+    <a href="#products" class="mobile-menu-link">Products</a>
+    <a href="#about" class="mobile-menu-link">About Me</a>
+  </div>
+</div>
 
 <div id="home" class="page">
   <section class="hero">
@@ -443,6 +519,55 @@ document.addEventListener('DOMContentLoaded', function() {
         targetElement.scrollIntoView({ behavior: 'smooth' });
       }
     });
+  });
+
+  // Mobile menu functionality
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  let isMenuOpen = false;
+
+  mobileMenuBtn.addEventListener('click', function() {
+    isMenuOpen = !isMenuOpen;
+    if (isMenuOpen) {
+      mobileMenu.classList.add('active');
+      mobileMenuBtn.textContent = '✕';
+    } else {
+      mobileMenu.classList.remove('active');
+      mobileMenuBtn.textContent = '☰';
+    }
+  });
+
+  // Mobile menu navigation
+  document.querySelectorAll('.mobile-menu-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href').substring(1);
+      const targetElement = document.getElementById(targetId);
+      
+      // Close mobile menu
+      mobileMenu.classList.remove('active');
+      mobileMenuBtn.textContent = '☰';
+      isMenuOpen = false;
+      
+      // Update active states
+      document.querySelectorAll('.mobile-menu-link').forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      document.querySelector(`.nav-link[href="#${targetId}"]`)?.classList.add('active');
+      
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Close mobile menu when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+      mobileMenu.classList.remove('active');
+      mobileMenuBtn.textContent = '☰';
+      isMenuOpen = false;
+    }
   });
 });
 </script>
