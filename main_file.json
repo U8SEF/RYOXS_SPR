@@ -1,0 +1,16 @@
+[
+  {
+            "name": "Naruto Complete Set",
+            "description": "Full character sprite sheet",
+            "price": "$24.99",
+            "image": "naruto.png",
+            "url":"http://devianart.com"
+        },
+  {
+            "name": "Sasuke Complete Set",
+            "description": "Full character sprite sheet",
+            "price": "$24.99",
+            "image": "sasuke.png",
+            "url":"http://devianart.com"
+        },
+]
