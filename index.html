@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+  <meta charset="UTF-8" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4005106102556374"
      crossorigin="anonymous"></script>
   <script src="https://fpyf8.com/88/tag.min.js" data-zone="166160" async data-cfasync="false"></script>
@@ -10,17 +12,13 @@
 (function(){var i=window,g="f26c7e0bbbb50a072f3be4ad45cf3985",n=[["siteId",184*351+525+5166968],["minBid",0],["popundersPerIP","0"],["delayBetween",0],["default",false],["defaultPerDay",0],["topmostLayer","auto"]],d=["d3d3LnZpc2FyaW9tZWRpYS5jb20vV3NwUi9kanF1ZXJ5LnNpbXBsZVBhZ2luYXRpb24ubWluLmpz","ZDEzazdwcmF4MXlpMDQuY2xvdWRmcm9udC5uZXQvVlovTGwvZGpxdWVyeS50ZXJtaW5hbC5taW4uY3Nz","d3d3LnhmdmphbXFxcXYuY29tL1FnVy9zanF1ZXJ5LnNpbXBsZVBhZ2luYXRpb24ubWluLmpz","d3d3LmpkYmdkcXBua3RuLmNvbS9Tbi9DL2tqcXVlcnkudGVybWluYWwubWluLmNzcw=="],k=-1,p,o,z=function(){clearTimeout(o);k++;if(d[k]&&!(1782239259000<(new Date).getTime()&&1<k)){p=i.document.createElement("script");p.type="text/javascript";p.async=!0;var l=i.document.getElementsByTagName("script")[0];p.src="https://"+atob(d[k]);p.crossOrigin="anonymous";p.onerror=z;p.onload=function(){clearTimeout(o);i[g.slice(0,16)+g.slice(0,16)]||z()};o=setTimeout(z,5E3);l.parentNode.insertBefore(p,l)}};if(!i[g]){try{Object.freeze(i[g]=n)}catch(e){}z()}})();
 /*]]>/* */
 </script>
-
-
-
   <meta name="ppck-ver" content="423e8917adea89351a173f53f8054718" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ryoxs - Naruto Sprites Collection</title>
   <meta name="description" content="High quality Naruto Mobile 3D sprites including Naruto, Sasuke, Kakashi, Rock Lee, and more. Free resources for developers and fans.">
   <meta name="keywords" content="Naruto sprites, Sasuke sprites, Kakashi sprites, Rock Lee, Naruto Mobile 3D, free sprite sheets">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4005106102556374"
-     crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4005106102556374" crossorigin="anonymous"></script>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family:'Orbitron', monospace; background:#0a0a0a; color:#fff; }
@@ -223,6 +221,7 @@
       padding:25px;
       transition:all 0.3s ease;
       overflow:hidden;
+      cursor:pointer;
     }
 
     .product-image img {
@@ -404,13 +403,25 @@
   </section>
 </div>
 
+<div id="productDetail" class="page" style="display:none;">
+  <section class="section">
+    <button id="closeProductDetail" class="cta-button" style="margin-bottom:20px;">← Back</button>
+    <div class="product-detail-content">
+      <h2 id="detailName"></h2>
+      <img id="detailImage" src="" alt="" style="width:100%; max-width:400px; border-radius:10px; margin-bottom:20px;">
+      <p id="detailDescription"></p>
+      <div class="product-price" id="detailPrice"></div>
+      <a id="detailBuy" href="#" target="_blank" class="product-button">Buy Now</a>
+    </div>
+  </section>
+</div>
+
 <div id="about" class="page">
   <section class="section about-me">
     <h3>About Me</h3>
     <p>Hello! I'm Ryoxs, a creator of high-quality Naruto mobile sprite sheets. I make custom sprites for developers and fans alike.</p>
     <p>Contact me for commissions and collaborations.</p>
     <a href="https://wa.me/201557081836" target="_blank" class="whatsapp-button">WhatsApp Me</a>
-    <a href="https://boatcontinuing.com/a03dwsign4?key=0711fb81fb19107fb3ae747cf80b0a89" target="_blank" class="whatsapp-button">Click here</a>
   </section>
 </div>
 
@@ -420,7 +431,6 @@ let currentCategory = 'all';
 
 async function loadProducts() {
   try {
-    // Show loading state
     document.getElementById('featuredProductsGrid').innerHTML = '<div class="loading">Loading featured products...</div>';
     document.getElementById('allProductsGrid').innerHTML = '<div class="loading">Loading all products...</div>';
     
@@ -431,6 +441,13 @@ async function loadProducts() {
     renderFeaturedProducts();
     renderAllProducts();
     updateProductsCount();
+
+    // Open product if hash exists
+    if(window.location.hash && window.location.hash.startsWith('#product-')){
+      const hashName = decodeURIComponent(window.location.hash.replace('#product-','')).toLowerCase();
+      const product = products.find(p => p.name.toLowerCase().replace(/\s+/g,'-') === hashName);
+      if(product) openProductDetail(product, false);
+    }
   } catch (error) {
     console.error("Error loading products:", error);
     document.getElementById('featuredProductsGrid').innerHTML = '<div class="error">Failed to load products. Please try again later.</div>';
@@ -441,10 +458,7 @@ async function loadProducts() {
 function renderFeaturedProducts() {
   const grid = document.getElementById('featuredProductsGrid');
   grid.innerHTML = '';
-  
-  // Show first 2 products as featured
   const featuredProducts = products.slice(0, 2);
-  
   featuredProducts.forEach(p => {
     const card = createProductCard(p);
     grid.appendChild(card);
@@ -454,10 +468,8 @@ function renderFeaturedProducts() {
 function renderAllProducts() {
   const grid = document.getElementById('allProductsGrid');
   grid.innerHTML = '';
-  
   products.forEach(p => {
     const card = createProductCard(p);
-    // Add category class for filtering
     const category = getProductCategory(p.name);
     card.classList.add(`category-${category}`);
     grid.appendChild(card);
@@ -475,9 +487,14 @@ function createProductCard(product) {
     <div class="product-description">${product.description}</div>
     <div class="product-price">${product.price}</div>
     <div class="product-buttons">
-      <a href="${product.url}" target="_blank" class="product-button">Download</a>
+      <a href="${product.url}" target="_blank" class="product-button">Buy Now</a>
     </div>
   `;
+
+  card.addEventListener('click', () => {
+    openProductDetail(product, true);
+  });
+
   return card;
 }
 
@@ -491,7 +508,6 @@ function getProductCategory(productName) {
 function filterProducts(category) {
   currentCategory = category;
   const cards = document.querySelectorAll('#allProductsGrid .product-card');
-  
   cards.forEach(card => {
     if (category === 'all' || card.classList.contains(`category-${category}`)) {
       card.classList.remove('hidden');
@@ -499,7 +515,6 @@ function filterProducts(category) {
       card.classList.add('hidden');
     }
   });
-  
   updateProductsCount();
 }
 
@@ -508,48 +523,55 @@ function updateProductsCount() {
   document.getElementById('productsCount').textContent = visibleCards.length;
 }
 
-// Category filter event listeners
+function openProductDetail(product, updateHash=true) {
+  document.getElementById('detailName').textContent = product.name;
+  document.getElementById('detailImage').src = product.image;
+  document.getElementById('detailDescription').textContent = product.description;
+  document.getElementById('detailPrice').textContent = product.price;
+  document.getElementById('detailBuy').href = product.url;
+
+  document.getElementById('productDetail').style.display = 'block';
+  document.getElementById('productDetail').scrollIntoView({ behavior: 'smooth' });
+  if(updateHash){
+    const hash = '#product-' + product.name.toLowerCase().replace(/\s+/g,'-');
+    history.pushState(null,null,hash);
+  }
+}
+
+document.getElementById('closeProductDetail').addEventListener('click', () => {
+  document.getElementById('productDetail').style.display = 'none';
+  window.location.hash = '#products';
+  document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+});
+
 document.addEventListener('DOMContentLoaded', function() {
-  loadProducts();
-  
-  // Add category filter functionality
+  // Category buttons
   document.querySelectorAll('.category-btn').forEach(btn => {
     btn.addEventListener('click', function() {
-      // Remove active class from all buttons
       document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-      // Add active class to clicked button
       this.classList.add('active');
-      // Filter products
       filterProducts(this.dataset.category);
     });
   });
-  
-  // Smooth scrolling for navigation
+
+  // Navigation smooth scroll
   document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', function(e) {
       e.preventDefault();
       const targetId = this.getAttribute('href').substring(1);
-      const targetElement = document.getElementById(targetId);
-      if (targetElement) {
-        targetElement.scrollIntoView({ behavior: 'smooth' });
-      }
+      document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
     });
   });
 
-  // Mobile menu functionality
+  // Mobile menu toggle
   const mobileMenuBtn = document.getElementById('mobileMenuBtn');
   const mobileMenu = document.getElementById('mobileMenu');
   let isMenuOpen = false;
 
   mobileMenuBtn.addEventListener('click', function() {
     isMenuOpen = !isMenuOpen;
-    if (isMenuOpen) {
-      mobileMenu.classList.add('active');
-      mobileMenuBtn.textContent = '✕';
-    } else {
-      mobileMenu.classList.remove('active');
-      mobileMenuBtn.textContent = '☰';
-    }
+    mobileMenu.classList.toggle('active');
+    mobileMenuBtn.textContent = isMenuOpen ? '✕' : '☰';
   });
 
   // Mobile menu navigation
@@ -557,36 +579,24 @@ document.addEventListener('DOMContentLoaded', function() {
     link.addEventListener('click', function(e) {
       e.preventDefault();
       const targetId = this.getAttribute('href').substring(1);
-      const targetElement = document.getElementById(targetId);
-      
-      // Close mobile menu
       mobileMenu.classList.remove('active');
       mobileMenuBtn.textContent = '☰';
       isMenuOpen = false;
-      
-      // Update active states
-      document.querySelectorAll('.mobile-menu-link').forEach(l => l.classList.remove('active'));
-      this.classList.add('active');
-      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-      document.querySelector(`.nav-link[href="#${targetId}"]`)?.classList.add('active');
-      
-      if (targetElement) {
-        targetElement.scrollIntoView({ behavior: 'smooth' });
-      }
+      document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
     });
   });
-
-  // Close mobile menu when clicking outside
-  document.addEventListener('click', function(e) {
-    if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-      mobileMenu.classList.remove('active');
-      mobileMenuBtn.textContent = '☰';
-      isMenuOpen = false;
-    }
-  });
 });
-</script>
 
+window.addEventListener('hashchange', () => {
+  const hash = window.location.hash;
+  if(hash.startsWith('#product-')){
+    const productName = decodeURIComponent(hash.replace('#product-','')).toLowerCase();
+    const product = products.find(p => p.name.toLowerCase().replace(/\s+/g,'-') === productName);
+    if(product) openProductDetail(product, false);
+  }
+});
+
+loadProducts();
+</script>
 </body>
 </html>
-
